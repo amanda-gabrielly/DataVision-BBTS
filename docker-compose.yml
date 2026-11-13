@@ -1,0 +1,20 @@
+# PostgreSQL local reproduzível para toda a equipe:  docker compose up -d
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: datavision-db
+    environment:
+      POSTGRES_USER: datavision
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-datavision}
+      POSTGRES_DB: datavision
+    ports:
+      - "5432:5432"
+    volumes:
+      - datavision-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U datavision -d datavision"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+volumes:
+  datavision-pg:
